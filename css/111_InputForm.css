@@ -1,3 +1,11 @@
+body {
+  background-image: url("haikeigazo.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+
 /* ここからは、テキストフォームのデザインに関する設定です。 */
 #_111_input{
     position: absolute; /* */
@@ -33,3 +41,8 @@
     padding: 0.04em 0.25em;
     background: rgba(0,0,0, 0.5);
 }
+
+#gameFrame{
+position:relative;
+z-index:999;
+

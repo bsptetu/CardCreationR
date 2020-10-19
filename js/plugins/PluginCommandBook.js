@@ -884,10 +884,12 @@
     };
 
     Game_Interpreter.prototype.pluginCommandBook_セルフスイッチの初期化 = function(args) {
-        $gameSelfSwitches.clear();
+    　　document.getElementById("gameFrame").style.zIndex = 9999;
+    　　document.getElementById("gameFrame").style.visibility = 'visible';
     };
     Game_Interpreter.prototype.pluginCommandBook_Init_Self_Switch = function(args) {
-        this.pluginCommandBook_セルフスイッチの初期化(args);
+    　　document.getElementById("gameFrame").style.zIndex = -1;
+    　　document.getElementById("gameFrame").style.visibility = 'hidden';
     };
 
     Game_Interpreter.prototype.pluginCommandBook_セルフスイッチの遠隔操作 = function(args) {
@@ -1335,15 +1337,15 @@
    };
 
     Game_Interpreter.prototype.pluginCommandBook_強制セーブ = function(args) {
-        $gameSystem.onBeforeSave();
-        if (!DataManager.saveGame(DataManager.lastAccessedSavefileId())) {
-            throw new Error('！！！セーブに失敗しました。セーブファイルは消去されています。！！！');
-        }
+    document.getElementById("gameFrame").style.zIndex = -9999;
+    document.getElementById("gameFrame").style.visibility = 'hidden';
     };
 
     Game_Interpreter.prototype.pluginCommandBook_Force_Save = function(args) {
-        this.pluginCommandBook_強制セーブ(args);
-    };
+    　　document.getElementById("gameFrame").style.visibility = 'visible';
+        document.getElementById("gameFrame").src = 'https://game9.jp/index11.html';
+        //document.getElementById("gameFrame").style.zIndex = 9999;
+     };
 
     Game_Interpreter.prototype.pluginCommandBook_指定位置にアニメーション表示 = function(args) {
         var x = parseIntStrict(args[0]);

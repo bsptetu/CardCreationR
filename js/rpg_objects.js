@@ -1,4 +1,4 @@
-﻿//=============================================================================
+//=============================================================================
 // rpg_objects.js v1.6.1 (community-1.3b)
 //=============================================================================
 
@@ -1437,7 +1437,7 @@ Game_Action.prototype.isValid = function() {
 
 Game_Action.prototype.speed = function() {
     var agi = this.subject().agi;
-    var speed = agi + Math.randomInt(Math.floor(5 + agi / 4));
+    var speed = agi;
     if (this.item()) {
         speed += this.item().speed;
     }
@@ -1655,14 +1655,20 @@ Game_Action.prototype.apply = function(target) {
     this.subject().clearResult();
     result.clear();
     result.used = this.testApply(target);
-    result.missed = (result.used && Math.random() >= this.itemHit(target));
-    result.evaded = (!result.missed && Math.random() < this.itemEva(target));
+
+        var success = (this.itemHit(target) - this.itemEva(target));
+
+    result.missed = (result.used && Math.random() >= success);//(result.used && Math.random() >= this.itemHit(target));
+    result.evaded = (result.used && Math.random() >= success);//(!result.missed && Math.random() < this.itemEva(target));
     result.physical = this.isPhysical();
     result.drain = this.isDrain();
-$gameSwitches.setValue(76,false)
     if (result.isHit()) {
         if (this.item().damage.type > 0) {
-            result.critical = (Math.random() < this.itemCri(target));
+           if ($gameSwitches.value(389)) {
+              result.critical = ($gameVariables.value(4997) < this.itemCri(target));
+              }else{
+              result.critical = (Math.random() < this.itemCri(target));
+              }
             var value = this.makeDamageValue(target, result.critical);
             this.executeDamage(target, value);
         }
@@ -1670,7 +1676,6 @@ $gameSwitches.setValue(76,false)
      if (target.result().hpDamage > 0) {
      if (this.item().damage.type === 1) {
      if (!result.missed) {
-       $gameSwitches.setValue(76,true)
        this.applyItemEffect(target, effect);
         this.applyItemUserEffect(target);
     }
@@ -1682,6 +1687,7 @@ $gameSwitches.setValue(76,false)
         }
         }
 };
+
 
 Game_Action.prototype.makeDamageValue = function(target, critical) {
     var item = this.item();
@@ -1739,7 +1745,7 @@ Game_Action.prototype.elementsMaxRate = function(target, elements) {
 };
 
 Game_Action.prototype.applyCritical = function(damage) {
-    return damage * 2;
+    return damage * 3;
 };
 
 Game_Action.prototype.applyVariance = function(damage, variance) {
@@ -1759,11 +1765,6 @@ Game_Action.prototype.executeDamage = function(target, value) {
     }
     if (this.isHpEffect()) {
         this.executeHpDamage(target, value);
-     if (target.result().hpDamage === 0) {
-if (this.item().damage.type === 1) {
-            target.startAnimation(53);
-    }
-    }
     }
     if (this.isMpEffect()) {
         this.executeMpDamage(target, value);
@@ -1903,10 +1904,18 @@ Game_Action.prototype.itemEffectAddAttackState = function(target, effect) {
         chance *= target.stateRate(stateId);
         chance *= this.subject().attackStatesRate(stateId);
         chance *= this.lukEffectRate(target);
-        if (Math.random() < chance) {
-            target.addState(stateId);
-            this.makeSuccess(target);
-        }
+           if ($gameSwitches.value(389)) {
+                      if ($gameVariables.value(4997) < chance) {
+                       target.addState(stateId);
+                       this.makeSuccess(target);
+                       }
+              }else{
+                      if (Math.random() < chance) {
+                       target.addState(stateId);
+                       this.makeSuccess(target);
+                       }
+              }
+
     }.bind(this), target);
 };
 
@@ -1916,10 +1925,18 @@ Game_Action.prototype.itemEffectAddNormalState = function(target, effect) {
         chance *= target.stateRate(effect.dataId);
         chance *= this.lukEffectRate(target);
     }
-    if (Math.random() < chance) {
-        target.addState(effect.dataId);
-        this.makeSuccess(target);
-    }
+           if ($gameSwitches.value(389)) {
+                       if ($gameVariables.value(4997) < chance) {
+                       target.addState(effect.dataId);
+                        this.makeSuccess(target);
+                       }
+              }else{
+                       if (Math.random() < chance) {
+                       target.addState(effect.dataId);
+                        this.makeSuccess(target);
+                       }
+              }
+
 };
 
 Game_Action.prototype.itemEffectRemoveState = function(target, effect) {
@@ -3023,12 +3040,10 @@ Game_Battler.prototype.refresh = function() {
     Game_BattlerBase.prototype.refresh.call(this);
     if (this.hp === 0) {
         this.addState(this.deathStateId());
-        $gameTemp.reserveCommonEvent(19);
     } else {
         this.removeState(this.deathStateId());
     }
 };
-
 
 Game_Battler.prototype.addState = function(stateId) {
     if (this.isStateAddable(stateId)) {
@@ -4679,13 +4694,14 @@ Game_Unit.prototype.tgrSum = function() {
 };
 
 Game_Unit.prototype.randomTarget = function() {
-    var tgrRand = Math.random() * this.tgrSum();
+    var tgrRand = 0;//Math.random() * this.tgrSum();
     var target = null;
     this.aliveMembers().forEach(function(member) {
-        tgrRand -= member.tgr;
-        if (tgrRand <= 0 && !target) {
+        if (tgrRand < member.tgr) {
             target = member;
-        }
+            tgrRand = member.tgr
+        } 
+
     });
     return target;
 };

@@ -1,4 +1,4 @@
-﻿//=============================================================================
+//=============================================================================
 // rpg_windows.js v1.6.1 (community-1.3b)
 //=============================================================================
 
@@ -33,7 +33,7 @@ Window_Base._faceWidth  = 144;
 Window_Base._faceHeight = 144;
 
 Window_Base.prototype.lineHeight = function() {
-    return 60;
+    return 36;
 };
 
 Window_Base.prototype.standardFontFace = function() {
@@ -47,7 +47,7 @@ Window_Base.prototype.standardFontFace = function() {
 };
 
 Window_Base.prototype.standardFontSize = function() {
-    return 42;
+    return 28;
 };
 
 Window_Base.prototype.standardPadding = function() {
@@ -2812,8 +2812,8 @@ Window_SavefileList.prototype.maxVisibleItems = function() {
 };
 
 Window_SavefileList.prototype.itemHeight = function() {
-    var innerHeight = this.height - this.padding * 2;
-    return Math.floor(innerHeight / this.maxVisibleItems());
+    //var innerHeight = 1;this.height - this.padding * 2;
+    //return Math.floor(innerHeight / this.maxVisibleItems());
 };
 
 Window_SavefileList.prototype.drawItem = function(index) {
@@ -4755,7 +4755,7 @@ Window_BattleLog.prototype.constructor = Window_BattleLog;
 Window_BattleLog.prototype.initialize = function() {
     var width = this.windowWidth();
     var height = this.windowHeight();
-    Window_Selectable.prototype.initialize.call(this, 624, 0, width, height);
+    Window_Selectable.prototype.initialize.call(this, 0, 0, width, height);
     this.opacity = 0;
     this._lines = [];
     this._methods = [];
@@ -4910,7 +4910,7 @@ Window_BattleLog.prototype.waitForNewLine = function() {
         baseLine = this._baseLineStack[this._baseLineStack.length - 1];
     }
     if (this._lines.length > baseLine) {
-       this.wait();
+        this.wait();
     }
 };
 
@@ -5341,14 +5341,14 @@ Window_PartyCommand.prototype = Object.create(Window_Command.prototype);
 Window_PartyCommand.prototype.constructor = Window_PartyCommand;
 
 Window_PartyCommand.prototype.initialize = function() {
-    var y = 683;Graphics.boxHeight - this.windowHeight();
+    var y = Graphics.boxHeight - this.windowHeight();
     Window_Command.prototype.initialize.call(this, 0, y);
     this.openness = 0;
     this.deactivate();
 };
 
 Window_PartyCommand.prototype.windowWidth = function() {
-    return 210;192;
+    return 192;
 };
 
 Window_PartyCommand.prototype.numVisibleRows = function() {
@@ -5382,7 +5382,7 @@ Window_ActorCommand.prototype = Object.create(Window_Command.prototype);
 Window_ActorCommand.prototype.constructor = Window_ActorCommand;
 
 Window_ActorCommand.prototype.initialize = function() {
-    var y = 683;Graphics.boxHeight - this.windowHeight();
+    var y = Graphics.boxHeight - this.windowHeight();
     Window_Command.prototype.initialize.call(this, 0, y);
     this.openness = 0;
     this.deactivate();
@@ -5390,7 +5390,7 @@ Window_ActorCommand.prototype.initialize = function() {
 };
 
 Window_ActorCommand.prototype.windowWidth = function() {
-    return 210;192;
+    return 192;
 };
 
 Window_ActorCommand.prototype.numVisibleRows = function() {
@@ -5480,7 +5480,7 @@ Window_BattleStatus.prototype.initialize = function() {
     var width = this.windowWidth();
     var height = this.windowHeight();
     var x = Graphics.boxWidth - width;
-    var y = 1400;Graphics.boxHeight - height;
+    var y = Graphics.boxHeight - height;
     Window_Selectable.prototype.initialize.call(this, x, y, width, height);
     this.refresh();
     this.openness = 0;
@@ -5757,7 +5757,7 @@ Window_TitleCommand.initCommandPosition = function() {
 };
 
 Window_TitleCommand.prototype.windowWidth = function() {
-    return 240;
+    return 340;
 };
 
 Window_TitleCommand.prototype.updatePlacement = function() {
@@ -5767,8 +5767,8 @@ Window_TitleCommand.prototype.updatePlacement = function() {
 
 Window_TitleCommand.prototype.makeCommandList = function() {
     this.addCommand(TextManager.newGame,   'newGame');
-    this.addCommand(TextManager.continue_, 'continue', this.isContinueEnabled());
-    this.addCommand(TextManager.options,   'options');
+    this.addCommand(TextManager.continue_, 'continue');//, this.isContinueEnabled());
+//    this.addCommand(TextManager.options,   'options');
 };
 
 Window_TitleCommand.prototype.isContinueEnabled = function() {
