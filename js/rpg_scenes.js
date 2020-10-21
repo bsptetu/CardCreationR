@@ -527,7 +527,10 @@ Scene_Title.prototype.playTitleMusic = function() {
     AudioManager.playBgm($dataSystem.titleBgm);
     AudioManager.stopBgs();
     AudioManager.stopMe();
-    document.getElementById("gameFrame").style.visibility = 'hidden';
+document.getElementById("gameFrame").src=" ";
+document.getElementById("gameFrame").style.visibility = 'hidden';
+document.getElementById("gameFrame").style.display = 'none';
+document.getElementById("gameFrame").style.zIndex = -2;
 };
 
 //-----------------------------------------------------------------------------
