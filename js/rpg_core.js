@@ -806,7 +806,7 @@ Bitmap.prototype._createCanvas = function(width, height){
     this.__context = this.__canvas.getContext('2d');
 
     this.__canvas.width = Math.max(width || 0, 1);
-    this.__canvas.height = Math.max(window.innerHeight || 0, 1);
+    this.__canvas.height = Math.max(Height || 0, 1);
 
     if(this._image){
         var w = Math.max(this._image.width || 0, 1);
