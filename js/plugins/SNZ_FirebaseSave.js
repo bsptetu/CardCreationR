@@ -233,7 +233,28 @@ FirebaseSave : 上書きセーブを実行します。
     this.updateNewGameOnly();
   };
 
+  Scene_Title.prototype.updateNewGameOnly = function() {
+    if (this._commandWindowClose) {
+      this._commandWindow.openness -= 64;
+    }
+    if (!this._seledted && this.isTriggered() && FirebaseSave._readytopushstart) {
+      //スタートを押した時実行
+      this._gameStartSprite.visible = false;
+      this._seledted = true;
+      this.playStartSe();
+      if (FirebaseSave._uid) {
+        //ログイン済みの場合
+        FirebaseSaveManager.prototype.fetchSavedTime();
+      } else if (DataManager.isAnySavefileExists()) {
+        //ローカルセーブがある場合はロード画面へ
+        FirebaseSave._islocalsave = true;
+        SceneManager.push(Scene_Load);
+      } else {
+        //ニューゲーム
+        SceneManager.push(Scene_Newgameoption);
+      }
 
+    }
     //認証は完了しているがセーブデータがないとき（初回）
     if (FirebaseSave._readytonewgame) {
       FirebaseSave._readytonewgame = false;
