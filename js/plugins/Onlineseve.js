@@ -555,6 +555,7 @@ FirebaseSave : 荳頑嶌縺阪そ繝ｼ繝悶ｒ螳溯｡後＠縺ｾ縺吶�
   var _Game_Temp_prototype_initialize = Game_Temp.prototype.initialize;
   Game_Temp.prototype.initialize = function() {
     _Game_Temp_prototype_initialize.call(this);
+if (firebase.apps.length === 0) {
     if (this.isPlaytest()) {
       FirebaseSave._readytopushstart = true;
     } else {
@@ -582,6 +583,7 @@ FirebaseSave : 荳頑嶌縺阪そ繝ｼ繝悶ｒ螳溯｡後＠縺ｾ縺吶�
         throw new Error(error);
       });
     }
+}
   }
 
 
