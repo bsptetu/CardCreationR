@@ -1,34 +1,41 @@
 <!DOCTYPE html>
 <html>
     <head>
-    <style>
-#gameFrame{
-    position: absolute;
-    top: 50%;  /* 要素の上端を中央に */
-    left: 50%;  /* 要素の左端を中央に */
-  visibility: visible;
-    -webkit-transform: translate(-50%, 0%);
-    transform: translate(-50%, 0%);
-    max-width:100%;
-    zIndex = 9999;
-}
-   </style>
         <meta charset="UTF-8">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="viewport" content="user-scalable=no">
-        <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1">
-        <link rel="shortcut icon" href="icon/favicon.png" />
-        <link rel="icon" href="icon/icon.png">
-        <link rel="apple-touch-icon" sizes="128x128" href="icon/apple-touch-icon.png">
+        <link rel="icon" href="icon/icon.png" type="image/png">
+        <link rel="apple-touch-icon" href="icon/icon.png">
         <link rel="stylesheet" type="text/css" href="fonts/gamefont.css">
-        <title>card.warid</title>
+        <title>CardCreationR</title>
     </head>
     <body style="background-color: black">
-<div class="fullscreen">
-</script>
         <script type="text/javascript" src="js/libs/pixi.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyDmhProwDl3axKOvsBEjup5N80Clxt_7uI",
+    authDomain: "cardcreationr.firebaseapp.com",
+    databaseURL: "https://cardcreationr.firebaseio.com",
+    projectId: "cardcreationr",
+    storageBucket: "cardcreationr.appspot.com",
+    messagingSenderId: "13710665462",
+    appId: "1:13710665462:web:95a0541751f9e6f761eed7",
+    measurementId: "G-YG5CK64WJ2"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
         <script type="text/javascript" src="js/libs/pixi-tilemap.js"></script>
         <script type="text/javascript" src="js/libs/pixi-picture.js"></script>
         <script type="text/javascript" src="js/libs/fpsmeter.js"></script>
@@ -42,6 +49,5 @@
         <script type="text/javascript" src="js/rpg_windows.js"></script>
         <script type="text/javascript" src="js/plugins.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
-<iframe id="gameFrame" allowfullscreen width="400" height="700" src="https://game9.jp/index11.html" frameborder="0" scrolling="no"></iframe>
-   </body>
+    </body>
 </html>
