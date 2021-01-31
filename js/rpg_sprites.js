@@ -1,5 +1,5 @@
 //=============================================================================
-// rpg_sprites.js v1.6.2
+// rpg_sprites.js v1.6.1 (community-1.3b)
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -687,7 +687,7 @@ Sprite_Actor.prototype.initMembers = function() {
 Sprite_Actor.prototype.createMainSprite = function() {
     this._mainSprite = new Sprite_Base();
     this._mainSprite.anchor.x = 0.5;
-    this._mainSprite.anchor.y = 1;
+    this._mainSprite.anchor.y = 0.5;
     this.addChild(this._mainSprite);
     this._effectTarget = this._mainSprite;
 };
@@ -901,7 +901,7 @@ Sprite_Actor.prototype.onMoveEnd = function() {
 };
 
 Sprite_Actor.prototype.damageOffsetX = function() {
-    return -32;
+    return 0;
 };
 
 Sprite_Actor.prototype.damageOffsetY = function() {
@@ -1548,7 +1548,7 @@ Sprite_Damage.prototype.createChildSprite = function() {
     var sprite = new Sprite();
     sprite.bitmap = this._damageBitmap;
     sprite.anchor.x = 0.5;
-    sprite.anchor.y = 1;
+    sprite.anchor.y = 0.5;
     sprite.y = -40;
     sprite.ry = sprite.y;
     this.addChild(sprite);
@@ -1621,8 +1621,8 @@ Sprite_StateIcon.prototype.initMembers = function() {
     this._iconIndex = 0;
     this._animationCount = 0;
     this._animationIndex = 0;
-    this.anchor.x = 0.5;
-    this.anchor.y = 0.5;
+    this.anchor.x = -0.3;
+    this.anchor.y = -0.6;
 };
 
 Sprite_StateIcon.prototype.loadBitmap = function() {
@@ -2170,6 +2170,7 @@ Spriteset_Base.prototype.createWebGLToneChanger = function() {
     var width = Graphics.width + margin * 2;
     var height = Graphics.height + margin * 2;
     this._toneFilter = new ToneFilter();
+    this._toneFilter.enabled = false;
     this._baseSprite.filters = [this._toneFilter];
     this._baseSprite.filterArea = new Rectangle(-margin, -margin, width, height);
 };
@@ -2226,8 +2227,13 @@ Spriteset_Base.prototype.updateToneChanger = function() {
 Spriteset_Base.prototype.updateWebGLToneChanger = function() {
     var tone = this._tone;
     this._toneFilter.reset();
-    this._toneFilter.adjustTone(tone[0], tone[1], tone[2]);
-    this._toneFilter.adjustSaturation(-tone[3]);
+    if (tone[0] || tone[1] || tone[2] || tone[3]) {
+        this._toneFilter.enabled = true;
+        this._toneFilter.adjustTone(tone[0], tone[1], tone[2]);
+        this._toneFilter.adjustSaturation(-tone[3]);
+    } else {
+        this._toneFilter.enabled = false;
+    }
 };
 
 Spriteset_Base.prototype.updateCanvasToneChanger = function() {

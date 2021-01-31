@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // OnlineAvatar.js
 // PUBLIC DOMAIN
 // ----------------------------------------------------------------------------
@@ -16,15 +16,18 @@
  * @param apiKey
  * @desc FirebaseのapiKey。各自コピペしてきてね
  * @default *******************
+ * @type variable
  *
  * @param authDomain
  * @desc FirebaseのauthDomain。各自コピペしてきてね
  * @default **********.firebaseapp.com
- *
+ * @type variable
+ * 
  * @param databaseURL
  * @desc FirebaseのdatabaseURL。各自コピペしてきてね
  * @default https://**********.firebaseio.com
- *
+ * @type variable
+ * 
  * @param avatarEvent
  * @desc アバターにコピーするコモンイベントの番号。0でアバター機能そのものをオフ
  * @default 1
@@ -90,6 +93,7 @@
  * このプラグインの利用法に制限はありません。お好きなようにどうぞ。
  */
 
+
 function OnlineManager() {
 	throw new Error('This is a static class');
 }
@@ -102,14 +106,10 @@ function Game_Avatar() {
 	'use strict';
 	OnlineManager.parameters = PluginManager.parameters('OnlineAvatar');
 	OnlineManager.url = 'https://www.gstatic.com/firebasejs/live/3.0/firebase.js';
-	OnlineManager.avatarTemplate = {"id":0,"meta":{},"name":"","note":"","pages":[{"conditions":{"actorId":1,"actorValid":false,"itemId":1,"itemValid":false,"selfSwitchCh":"A","selfSwitchValid":false,"switch1Id":1,"switch1Valid":false,"switch2Id":1,"switch2Valid":false,"variableId":1,"variableValid":false,"variableValue":0},"directionFix":false,"image":{"tileId":0,"characterName":"","direction":2,"pattern":1,"characterIndex":0},"list":null,"moveFrequency":5,"moveRoute":{"list":[{"code":45,"parameters":["this.moveOnlineXy()"],"indent":null},{"code":0,"parameters":[]}],"repeat":true,"skippable":false,"wait":false},"moveSpeed":5,"moveType":3,"priorityType":1,"stepAnime":false,"through":true,"trigger":4,"walkAnime":true}],"x":0,"y":0};
-	OnlineManager.avatarsInThisMap = null;
-	OnlineManager.mapRef = null;
-	OnlineManager.selfRef = null;
-	OnlineManager.switchRef = null;
 	OnlineManager.variableRef = null;
 	OnlineManager.user = null;
 	OnlineManager.syncBusy = false;	//同期接続する瞬間、送信が受信を上書きするのを阻止
+	OnlineManager.syncBusyg = false;	//同期接続する瞬間、送信が受信を上書きするのを阻止
 
 	//ネット上からfirebaseファイルを読み込む
 	OnlineManager.initialize = function() {
@@ -126,15 +126,17 @@ function Game_Avatar() {
 
 	//firebaseを起動
 	OnlineManager.awake = function() {
+
+
 		var ps = this.parameters;
-		ps['avatarEvent'] = +ps['avatarEvent'];
-		ps['syncSwitchStart'] = +ps['syncSwitchStart'];
-		ps['syncSwitchEnd'] = +ps['syncSwitchEnd'];
+		//ps['avatarEvent'] = +ps['avatarEvent'];
+		//ps['syncSwitchStart'] = +ps['syncSwitchStart'];
+		//ps['syncSwitchEnd'] = +ps['syncSwitchEnd'];
 		ps['syncVariableStart'] = +ps['syncVariableStart'];
 		ps['syncVariableEnd'] = +ps['syncVariableEnd'];
 
 		try {
-			firebase.initializeApp({apiKey: ps['apiKey'], authDomain: ps['authDomain'], databaseURL: ps['databaseURL'] storageBucket: "cardcreationr.appspot.com"});
+			firebase.initializeApp({apiKey: ps['apiKey'], authDomain: ps['authDomain'], databaseURL: ps['databaseURL']});
 		} catch(e) {
 			throw new Error('apiKeyが正しく設定されていません。ご確認ください。');
 		}
@@ -155,12 +157,12 @@ function Game_Avatar() {
 
 		//再接続時にonDisconnectを張り直す
 		var connectedRef = firebase.database().ref('.info/connected');
-		connectedRef.on('value', function(data) {
+		connectedRef.once('value', function(data) {
 			if (data.val() && OnlineManager.selfRef) OnlineManager.selfRef.onDisconnect().remove();
 		});
 
 		//接続が最初のマップ読み込みよりも遅延した時は、今いるマップのオンラインデータを購読
-		if (this.mapExists()) this.connectNewMap();
+		//if (this.mapExists()) this.connectNewMap();
 
 		if ($gameSwitches) this.startSync();
 	};
@@ -168,153 +170,36 @@ function Game_Avatar() {
 	//スイッチと変数のオンライン同期の開始
 	OnlineManager.startSync = function() {
 		if (!this.user) return;
-
-		if (this.parameters['syncSwitchStart'] || this.parameters['syncSwitchEnd']) {
-			if (this.switchRef) this.switchRef.off();
-			else this.switchRef = firebase.database().ref('switches');
-			OnlineManager.syncBusy = true;
-			this.switchRef.once('value', function(data) {
-				OnlineManager.syncBusy = false;
-			});
-			this.switchRef.on('child_added', function(data) {
-				$gameSwitches.setValue(data.key, data.val(), true);
-			});
-			this.switchRef.on('child_changed', function(data) {
-				$gameSwitches.setValue(data.key, data.val(), true);
-			});
-		}
-
 		if (this.parameters['syncVariableStart'] || this.parameters['syncVariableEnd']) {
-			if (this.variableRef) this.variableRef.off();
-			else this.variableRef = firebase.database().ref('variables');
+			if (this.databaseRef) this.databaseRef.off();
+			else this.databaseRef = firebase.database().ref('variables');
 			OnlineManager.syncBusy = true;
-			this.variableRef.once('value', function(data) {
+			this.databaseRef.once('value', function(data) {
 				OnlineManager.syncBusy = false;
 			});
-			this.variableRef.on('child_added', function(data) {
+			this.databaseRef.on('child_added', function(data) {
 				$gameVariables.setValue(data.key, data.val(), true);
 			});
-			this.variableRef.on('child_changed', function(data) {
+			this.databaseRef.on('child_changed', function(data) {
 				$gameVariables.setValue(data.key, data.val(), true);
 			});
 		}
+
 	};
 
-	//新しいマップのオンラインデータを購読してアバターの情報を受け取る
-	OnlineManager.connectNewMap = function() {
-		if (!this.user || !this.parameters['avatarEvent']) return;
-
-		//前のマップのコールバックはデタッチして、座標情報をリムーブ
-		if (this.mapRef) {
-			this.mapRef.off();
-			this.selfRef.onDisconnect().cancel();
-			this.selfRef.remove();
-		}
-
-		if (!$dataMap.meta || $dataMap.meta.avatar_off) {
-			this.mapRef = null;
-			this.selfRef = null;
-			this.avatarsInThisMap = null;
-			return;
-		}
-
-		this.mapRef = firebase.database().ref('map' + $gameMap.mapId().padZero(3));
-		this.selfRef = this.mapRef.child(this.user.uid);
-		this.selfRef.onDisconnect().remove();	//切断時にキャラ座標をリムーブ
-
-		var avatarTemplate = this.avatarTemplate;
-		var avatarsInThisMap = this.avatarsInThisMap = {};
-		if (!avatarTemplate.pages[0].list) {
-			avatarTemplate.pages[0].list = $dataCommonEvents[this.parameters['avatarEvent']].list;
-		}
-
-		//他プレイヤーが同マップに入場
-		this.mapRef.on('child_added', function(data) {
-			if (OnlineManager.shouldDisplay(data)) {
-				avatarsInThisMap[data.key] = new Game_Avatar(avatarTemplate, data.val());
-			}
-		});
-
-		//他プレイヤーが同マップで移動
-		this.mapRef.on('child_changed', function(data) {
-			if (OnlineManager.shouldDisplay(data)) {
-				if (avatarsInThisMap[data.key]) {
-					avatarsInThisMap[data.key].setOnlineData(data.val());
-				} else {	//念の為
-					avatarsInThisMap[data.key] = new Game_Avatar(avatarTemplate, data.val());
-				}
-			}
-		});
-
-		//他プレイヤーが同マップから退場
-		this.mapRef.on('child_removed', function(data) {
-			if (OnlineManager.shouldDisplay(data)) {
-				if (avatarsInThisMap[data.key]) avatarsInThisMap[data.key].erase();
-				delete avatarsInThisMap[data.key];
-			}
-		});
-
-		this.sendPlayerInfo();
-	};
-
-	//送信するプレイヤー情報
-	OnlineManager.playerInfo = function() {
-		var $ = $gamePlayer;
-		return {x: $.x, y: $.y, direction: $.direction(), speed: $.realMoveSpeed(), charaName: $.characterName(), charaIndex: $.characterIndex()};
-	};
-
-	//プレイヤー情報をオンライン上に送信
-	OnlineManager.sendPlayerInfo = function() {
-		if (this.selfRef) this.selfRef.update(this.playerInfo());
-	};
-
-	//プラグインコマンドで指定した情報とプレイヤー情報をオンライン上に送信
-	OnlineManager.sendCustomInfo = function(key, value) {
-		var info = this.playerInfo();
-		info[key] = value;
-		if (this.selfRef) this.selfRef.update(info);
-	};
-
-	//プレイヤー情報を削除
-	OnlineManager.removePlayerInfo = function() {
-		if (this.selfRef) this.selfRef.remove();
-	};
-
-	//$gameMapや$dataMapがnullでないことを保証
-	OnlineManager.mapExists = function() {
-		return DataManager.isMapLoaded();
-	};
-
-	//送られたデータが自分自身でなく、マップが読み込まれている時は表示
-	OnlineManager.shouldDisplay = function(data) {
-		return data.key !== this.user.uid && this.mapExists();
-	};
-
-	//スイッチが同期範囲内
-	OnlineManager.switchInRange = function(switchId) {
-		return this.parameters['syncSwitchStart'] <= switchId && switchId <= this.parameters['syncSwitchEnd'];
-	};
 
 	//変数が同期範囲内
 	OnlineManager.variableInRange = function(variableId) {
 		return this.parameters['syncVariableStart'] <= variableId && variableId <= this.parameters['syncVariableEnd'];
 	};
 
-	//スイッチを送信
-	OnlineManager.sendSwitch = function(switchId, value) {
-		if (this.switchRef && !this.syncBusy && this.switchInRange(switchId)) {
-			var send = {};
-			send[switchId] = value;
-			this.switchRef.update(send);
-		}
-	};
 
 	//変数を送信
 	OnlineManager.sendVariable = function(variableId, value) {
-		if (this.variableRef && !this.syncBusy && this.variableInRange(variableId)) {
+		if (this.databaseRef && !this.syncBusy && this.variableInRange(variableId)) {
 			var send = {};
 			send[variableId] = value;
-			this.variableRef.update(send);
+			this.databaseRef.update(send);
 		}
 	};
 
@@ -327,91 +212,13 @@ function Game_Avatar() {
 		OnlineManager.initialize();
 	};
 
-	//同じマップの時は$dataMapを読み込み直さない
-	var _DataManager_loadMapData = DataManager.loadMapData;
-	DataManager.loadMapData = function(mapId) {
-		if ($gamePlayer.isTransferring() || SceneManager.isPreviousScene(Scene_Load)) {
-			_DataManager_loadMapData.apply(this, arguments);
-		}
-	};
-
-	//歩行時
-	var _Game_Player_moveStraight = Game_Player.prototype.moveStraight;
-	Game_Player.prototype.moveStraight = function(d) {
-		var prevD = this.direction();
-		_Game_Player_moveStraight.apply(this, arguments);
-		//前回と位置か方向が違う時のみ送信する
-		if (this.isMovementSucceeded() || d !== prevD) {
-			OnlineManager.sendPlayerInfo();
-		}
-	};
-
-	//グラフィック変更時
-	var _Game_Player_setImage = Game_Player.prototype.setImage;
-	Game_Player.prototype.setImage = function(characterName, characterIndex) {
-		_Game_Player_setImage.apply(this, arguments);
-		if (!this.isTransferring()) OnlineManager.sendPlayerInfo();	//場所移動した時は不要
-	};
-
-	//マップ切り替え時
-	var _Game_Player_performTransfer = Game_Player.prototype.performTransfer;
-	Game_Player.prototype.performTransfer = function() {
-		if ($gameMap.mapId() === $gamePlayer.newMapId()) {
-			for (var key in OnlineManager.avatarsInThisMap) OnlineManager.avatarsInThisMap[key].erase();
-		}
-		_Game_Player_performTransfer.apply(this, arguments);
-		OnlineManager.connectNewMap();
-	};
-
-	//ロードした時はセーブ時点の残存アバターを消す
-	//（Scene_Load.onLoadSuccessにフックすると$dataMapに触れないのでこのタイミング）
-	var _Scene_Map_start = Scene_Map.prototype.start;
-	Scene_Map.prototype.start = function() {
-		_Scene_Map_start.apply(this, arguments);
-		if (SceneManager.isPreviousScene(Scene_Load)) {
-			$gameMap.events().forEach(function(event) {if (event instanceof Game_Avatar) event.erase();});
-			OnlineManager.connectNewMap();
-		}
-	};
-
-	//タイトルに戻った時にもキャラ座標をリムーブ
-	var _Scene_Title_start = Scene_Title.prototype.start;
-	Scene_Title.prototype.start = function() {
-		OnlineManager.removePlayerInfo();
-		_Scene_Title_start.apply(this, arguments);
-	};
-
-	//プラグインコマンド
-	var _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;
-	Game_Interpreter.prototype.pluginCommand = function(command, args) {
-		_Game_Interpreter_pluginCommand.apply(this, arguments);
-		if (command.toLowerCase() === 'online') {
-			switch (args[1].toLowerCase()) {
-				case 'from':
-					var online = this.character(0).online;
-					$gameVariables.setValue(+args[0], online && online[args[2]]);
-					break;
-				case 'to':
-					OnlineManager.sendCustomInfo(args[2], $gameVariables.value(+args[0]));
-					break;
-				default:
-					break;
-			}
-		}
-	};
-
-	//スイッチ同期
-	var _Game_Switches_setValue = Game_Switches.prototype.setValue;
-	Game_Switches.prototype.setValue = function(switchId, value, byOnline) {
-		_Game_Switches_setValue.call(this, switchId, value);
-		if (!byOnline) OnlineManager.sendSwitch(switchId, this.value(switchId));
-	};
 
 	//変数同期
 	var _Game_Variables_setValue = Game_Variables.prototype.setValue;
 	Game_Variables.prototype.setValue = function(variableId, value, byOnline) {
 		_Game_Variables_setValue.call(this, variableId, value);
-		if (!byOnline) OnlineManager.sendVariable(variableId, this.value(variableId));
+		if (!byOnline)
+		OnlineManager.sendVariable(variableId, this.value(variableId));
 	};
 
 	//スイッチ・変数の初期化時に、再同期処理（タイミングはスイッチが代表する）
@@ -429,241 +236,44 @@ function Game_Avatar() {
 		this.refresh();
 	};
 
+	//プラグインコマンドセーブ
+	var _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;
+	Game_Interpreter.prototype.pluginCommand = function(command, args) {
+		_Game_Interpreter_pluginCommand.apply(this, arguments);
+		if (command.toLowerCase() === 'onlineseve') {
+                  this.databaseRef = firebase.database().ref($gameVariables.value(4997));
+			var send = {};
+			send['4994'] = $gameVariables.value(4994);
+			this.databaseRef.update(send);
+			var send = {};
+			send['4995'] = $gameVariables.value(4995);
+			this.databaseRef.update(send);
+			var send = {};
+			send['4996'] = $gameVariables.value(4996);
+			this.databaseRef.update(send);
+			var send = {};
+			send['4998'] = $gameVariables.value(4998);
+			this.databaseRef.update(send);
+			var send = {};
+			send['4999'] = $gameVariables.value(4999);
+			this.databaseRef.update(send);
+			var send = {};
+			send['5000'] = $gameVariables.value(5000);
+			this.databaseRef.update(send);
+		}
+		if (command.toLowerCase() === 'onlineload') {
+			this.databaseRef = firebase.database().ref($gameVariables.value(4997));
+//
+    this.databaseRef.once('value', function(data) {
+    })
+			this.databaseRef.on('child_added', function(data) {
+				$gameVariables.setValue(data.key, data.val(), true);
+			});
+			this.databaseRef.on('child_changed', function(data) {
+				$gameVariables.setValue(data.key, data.val(), true);
+			});
 
-
-	//Game_Avatar
-	//アバターとして使用するマップイベントを定義
-	Game_Avatar.prototype = Object.create(Game_Event.prototype);
-	Game_Avatar.prototype.constructor = Game_Avatar;
-
-	Game_Avatar.prototype.initialize = function(eventData, onlineData) {
-		var mapId = $gameMap.mapId();
-		var eventId = $gameMap.getEventIdSequence ? $gameMap.getEventIdSequence() : $gameMap._events.length;
-
-		['A', 'B', 'C', 'D'].forEach(function(switchId) {
-			var key = [mapId, eventId, switchId];
-			$gameSelfSwitches.setValue(key, false);
-		});
-
-		this.eventData = eventData;
-		Game_Event.prototype.initialize.call(this, mapId, eventId);
-		this.locate(onlineData.x, onlineData.y);
-		this.setDirection(onlineData.direction);
-		this.setMoveSpeed(onlineData.speed);
-		this.setImage(onlineData.charaName, onlineData.charaIndex);
-		this.setOnlineData(onlineData);
-		$gameMap._events.push(this);
-
-		var scene = SceneManager._scene;
-		if (scene instanceof Scene_Map) {
-			var sprite = new Sprite_Character(this);
-			scene._spriteset._characterSprites.push(sprite);
-			scene._spriteset._tilemap.addChild(sprite);
+//
 		}
 	};
-
-	Game_Avatar.prototype.event = function() {
-		return this.eventData;
-	};
-
-	Game_Avatar.prototype.setOnlineData = function(onlineData) {
-		this.online = onlineData;
-	};
-
-	//オンライン座標と同じ位置まで歩く（avatarTemplateのカスタムルートに設定されています）
-	Game_Avatar.prototype.moveOnlineXy = function() {
-		this.setMoveSpeed(this.online.speed);
-		this.setImage(this.online.charaName, this.online.charaIndex);
-		var distance = $gameMap.distance(this.x, this.y, this.online.x, this.online.y);
-		if (distance === 0) {	//座標に到達しているなら方向転換のみ
-			this.setDirection(this.online.direction);
-		} else if (distance > 5) {	//座標まで５歩を超えて離れているならワープ
-			this.locate(this.online.x, this.online.y);
-			this.setDirection(this.online.direction);
-		} else {	//座標まで１～５歩ならその座標へ歩く
-			this.moveTowardCharacter(this.online);
-		}
-	};
-})();
-
-  //-----------------------------------------------------------------------------
-  // Game_Interpreter_pluginCommand
-
-  var _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;
-  Game_Interpreter.prototype.pluginCommand = function(command, args) {
-    _Game_Interpreter_pluginCommand.call(this, command, args);
-    if (command === 'FirebaseSave') {
-      if ($gameSystem._saveEnabled) {
-        FirebaseSaveManager.prototype.startToSave();
-      }
-    }
-  };
-
-
-  //-----------------------------------------------------------------------------
-
-
-  //-----------------------------------------------------------------------------
-  // FirebaseSaveManager
-
-  function FirebaseSaveManager() {
-    throw new Error('this is static class.');
-  }
-
-  FirebaseSaveManager.prototype._loadcount = 0;
-  FirebaseSaveManager.prototype._savedtimes = [];
-
-
-  FirebaseSaveManager.prototype.initConnection = function() {
-    if (!this._database) {
-      this._database = firebase.database();
-      this._storage = firebase.storage();
-    }
-  }
-
-  FirebaseSaveManager.prototype.startToSave = function() {
-    //セーブ中表記
-    $gameScreen.showPicture(3, "saving", 0, 10, 690, 100, 100, 255, 0);
-    if (FirebaseSave._islocalsave) {
-      //ローカルの人はそのまま上書き
-      var slotId = DataManager.lastAccessedSavefileId();
-      $gameSystem.onBeforeSave();
-      if (DataManager.saveGame(slotId)) {
-        StorageManager.cleanBackup(slotId);
-        $gameScreen.erasePicture(3);
-      }
-    } else {
-      //記録するdateは「セーブコマンドを実行した」時点とします
-      var date = new Date();
-      var time = date.getTime();
-      //セーブ処理の開始
-      $gameSystem.onBeforeSave();
-      this.postSaveData(time);
-    }
-  };
-
-  FirebaseSaveManager.prototype.fetchSavedTime = function() {
-    //最後にセーブしたタイムスタンプを取得する　失敗に備え5件まで
-    var userRef = this._database.ref('user/' + FirebaseSave._uid).limitToLast(5);
-    userRef.once('value').then(function(snapshot) {
-      var result = snapshot.val();
-      if (result) {
-        //ロード
-        var arr = Object.keys(result).map(function(key) {
-          return result[key]
-        });
-        FirebaseSaveManager.prototype._savedtimes = arr.reverse();
-        FirebaseSaveManager.prototype.fetchSaveData();
-      } else {
-        //セーブがまだないときはニューゲーム
-        FirebaseSave._readytonewgame = true;
-      }
-    });
-  }
-
-  FirebaseSaveManager.prototype.fetchSaveData = function() {
-    //前回セーブ時のタイムスタンプを元にセーブデータを取得
-    var storageRef = this._storage.ref('user/' + FirebaseSave._uid + '/' + this._savedtimes[this._loadcount].time + '.rpgsave');
-    storageRef.getDownloadURL().then(function(url) {
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'text';
-      xhr.onload = function(event) {
-        FirebaseSave._savedata = xhr.response;
-        FirebaseSaveManager.prototype.loadSaveData();
-      };
-      xhr.open('GET', url);
-      xhr.send();
-    }).catch(function(error) {
-      //5回までデータを遡ってやり直す
-      FirebaseSaveManager.prototype._loadcount++;
-      if (FirebaseSaveManager.prototype._loadcount < 5) {
-        FirebaseSaveManager.prototype.fetchSaveData();
-      } else {
-        throw new Error('セーブデータのロードに失敗しました。');
-      }
-    });
-
-
-  }
-
-  FirebaseSaveManager.prototype.loadSaveData = function() {
-    //取得したセーブデータでゲームを起動する（DataManagerに渡す）
-    var result = DataManager.loadGameFromNetwork();
-    if (result === 'success') {
-      this._loadcount = 0;
-      Scene_Title.prototype._loadcomplete = true;
-    } else {
-      //5回までデータを遡ってやり直す
-      this._loadcount++;
-      if (this._loadcount < 5) {
-        this.loadSaveData();
-      } else {
-        throw new Error('セーブデータのロードに失敗しました。');
-      }
-    }
-  }
-
-  FirebaseSaveManager.prototype.postSaveData = function(time) {
-    var savedata = JsonEx.stringify(DataManager.makeSaveContents());
-    var compressedsavedata = LZString.compressToBase64(savedata);
-    var file = new Blob([compressedsavedata], {
-      type: "text/plain"
-    });
-    var metadata = {
-      contentType: 'text/plain'
-    };
-    if (!this._storageRef) {
-      this._storageRef = firebase.storage().ref();
-    }
-    if (!FirebaseSave._uid) {
-      FirebaseSave._uid = firebase.auth().currentUser.uid;
-    }
-    var uploadTask = this._storageRef.child('user/' + FirebaseSave._uid + '/' + time + '.rpgsave').put(file, metadata);
-    uploadTask._time = time;
-    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-      function(snapshot) {},
-      function(error) {
-        console.log(error);
-        console.log('オンラインセーブに失敗しました。ゲームは続行します。');
-      },
-      function() {
-        //成功したらタイムスタンプを記録
-        FirebaseSaveManager.prototype.postSavedTime(uploadTask._time);
-        //古いセーブを消す
-        FirebaseSaveManager.prototype.deleteOldSave();
-      });
-  }
-  FirebaseSaveManager.prototype.postSavedTime = function(time) {
-    //配列に記録
-    this._savedtimes.unshift(time);
-    //dbに記録
-    var myref = this._database.ref('user/' + FirebaseSave._uid);
-    var newPostKey = myref.push().key;
-    var updates = {};
-    updates[newPostKey] = {
-      time: time
-    };
-    myref.update(updates);
-  }
-
-  FirebaseSaveManager.prototype.deleteOldSave = function() {
-    //6こ以上セーブデータが溜まっていたら実行
-    if (this._savedtimes[5]) {
-      //配列の末尾のセーブデータを消す
-      var storageRef = this._storage.ref('user/' + FirebaseSave._uid + '/' + this._savedtimes[this._savedtimes.length - 1].time + '.rpgsave');
-      storageRef.delete().then(function() {
-        console.log('古いセーブデータを削除しました。');
-        $gameScreen.erasePicture(3);
-      }).catch(function(error) {
-        console.log(error);
-        console.log('古いセーブデータの削除に失敗しました。ゲームは続行します。');
-        $gameScreen.erasePicture(3);
-      });
-      //配列からも消す
-      this._savedtimes.pop();
-    } else {
-      $gameScreen.erasePicture(3);
-    }
-  }
-
-})();
+ })();
