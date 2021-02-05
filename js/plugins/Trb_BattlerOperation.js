@@ -74,25 +74,25 @@
  */
 (function () {
  
-//独自改変用メソッド1（戦闘中、常に実行） 23 38
+//独自改変用メソッド1（戦闘中、常に実行） 38 108
 Scene_Battle.prototype.updateOriginalBattleProcess1 = function() {
- $gameParty.set(1, 35, 400, 0)
- $gameParty.set(2, 200, 276, 0)
- $gameParty.set(3, 200, 372, 0)
- $gameParty.set(4, 200, 463, 0)
- $gameParty.set(5, 200, 553, 0)
- $gameParty.set(6, 117, 332, 0)
- $gameParty.set(7, 117, 424, 0)
- $gameParty.set(8, 117, 515, 0)
+ $gameParty.set(1, 64, 515, 0)
+ $gameParty.set(2, 301, 304, 0)
+ $gameParty.set(3, 301, 446, 0)
+ $gameParty.set(4, 301, 585, 0)
+ $gameParty.set(5, 301, 724, 0)
+ $gameParty.set(6, 178, 394, 0)
+ $gameParty.set(7, 178, 538, 0)
+ $gameParty.set(8, 178, 675, 0)
  $gameParty.set(9, -250, 724, 0)
-$gameTroop.set(1, 445, 400, 1)
-$gameTroop.set(2, 289, 276, 1)
-$gameTroop.set(3, 289, 372, 1)
-$gameTroop.set(4, 289, 463, 1)
-$gameTroop.set(5, 289, 553, 1)
-$gameTroop.set(6, 367, 332, 1)
-$gameTroop.set(7, 367, 424, 1)
-$gameTroop.set(8, 367, 515, 1)
+$gameTroop.set(1, 680, 545, 1)
+$gameTroop.set(2, 438, 304, 1)
+$gameTroop.set(3, 438, 446, 1)
+$gameTroop.set(4, 438, 585, 1)
+$gameTroop.set(5, 438, 724, 1)
+$gameTroop.set(6, 568, 394, 1)
+$gameTroop.set(7, 568, 538, 1)
+$gameTroop.set(8, 568, 675, 1)
 };
  
 //独自改変用メソッド2（戦闘中、ウインドウが開いてる時と戦闘終了時以外 常に実行）

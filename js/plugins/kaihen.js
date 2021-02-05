@@ -103,14 +103,14 @@ Window_BattleStatus.prototype.initialize = function() {
 
 Window_PartyCommand.prototype.initialize = function() {
     var y = 720;Graphics.boxHeight - this.windowHeight();
-    Window_Command.prototype.initialize.call(this, 290, 540);
+    Window_Command.prototype.initialize.call(this, 500, y);
     this.openness = 0;
     this.deactivate();
 };
 
 Window_ActorCommand.prototype.initialize = function() {
     var y = 720;Graphics.boxHeight - this.windowHeight();
-    Window_Command.prototype.initialize.call(this, 290, 540);
+    Window_Command.prototype.initialize.call(this, 500, y);
     this.openness = 0;
     this.deactivate();
     this._actor = null;
