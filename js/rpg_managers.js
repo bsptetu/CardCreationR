@@ -2137,6 +2137,7 @@ function BattleManager() {
 }
 
 BattleManager.setup = function(troopId, canEscape, canLose) {
+$gameScreen.startTint([-255,-255,-255,0], 1)
     this.initMembers();
     this._canEscape = canEscape;
     this._canLose = canLose;

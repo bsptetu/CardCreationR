@@ -2242,7 +2242,7 @@ Scene_Battle.prototype.create = function() {
 
 Scene_Battle.prototype.start = function() {
     Scene_Base.prototype.start.call(this);
-   $gameScreen.startTint([-255,-255,-255,0], 1)
+   //$gameScreen.startTint([-255,-255,-255,0], 1)
     this.startFadeIn(this.fadeSpeed(), false);
     BattleManager.playBattleBgm();
     BattleManager.startBattle();
