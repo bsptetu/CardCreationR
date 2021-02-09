@@ -2237,7 +2237,7 @@ Scene_Battle.prototype.initialize = function() {
 
 Scene_Battle.prototype.create = function() {
     Scene_Base.prototype.create.call(this);
-   $gameScreen.startTint([-255,-255,-255,0], 1)
+   //$gameScreen.startTint([-255,-255,-255,0], 1)
     this.createDisplayObjects();
 };
 
