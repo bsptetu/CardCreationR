@@ -879,11 +879,11 @@ Scene_Map.prototype.snapForBattleBackground = function() {
     this._windowLayer.visible = false;
     SceneManager.snapForBackground();
     this._windowLayer.visible = true;
-    $gameScreen.startFlash(color, duration);
 };
 
 Scene_Map.prototype.startFlashForEncounter = function(duration) {
     var color = [255, 255, 255, 255];
+    $gameScreen.startFlash(color, duration);
 };
 
 Scene_Map.prototype.encounterEffectSpeed = function() {
@@ -2242,6 +2242,7 @@ Scene_Battle.prototype.create = function() {
 
 Scene_Battle.prototype.start = function() {
     Scene_Base.prototype.start.call(this);
+   $gameScreen.startTint([-255,-255,-255,0], 1)
     this.startFadeIn(this.fadeSpeed(), false);
     BattleManager.playBattleBgm();
     BattleManager.startBattle();
