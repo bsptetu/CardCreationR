@@ -2973,13 +2973,13 @@ Sprite_Battler.prototype.stepForward = function() {
 };
 
 Sprite_Battler.prototype.stepBack = function() {
-//    this.startMove(0, 0, 12);
+//    this.startMove(-1, 0, 12);
 };
 
 Sprite_Battler.prototype.stepFlinch = function() {
-//    var flinchX = this.x - this._homeX - Yanfly.Param.BECFlinchDist;
-//    var flinchY = this.y - this._homeY;
-//    this.startMove(flinchX, flinchY, 6);
+$gameSwitches.setValue(597,true)
+    this.startMove(0, 0, 15);
+
 };
 
 Sprite_Battler.prototype.stepSubBack = function() {
@@ -2988,12 +2988,12 @@ Sprite_Battler.prototype.stepSubBack = function() {
 };
 
 Sprite_Battler.prototype.stepToSubstitute = function(focus) {
-//    var target = focus.battler();
-//    var targetX = (this.x - this._homeX) + (target._homeX - this._homeX);
-//    var targetY = (this.y - this._homeY) + (target._homeY - this._homeY);;
-//    if (focus.isActor()) targetX -= this._mainSprite.width / 2;
-//    if (focus.isEnemy()) targetX += this.width / 2;
-//    this.startMove(0, 0, 1);
+    //var target = focus.battler();
+    //var targetX = (this.x - this._homeX) + (target._homeX - this._homeX);
+    //var targetY = (this.y - this._homeY) + (target._homeY - this._homeY);;
+    //if (focus.isActor()) targetX -= this._mainSprite.width / 2;
+    //if (focus.isEnemy()) targetX += this.width / 2;
+    //this.startMove(0, 0, 1);
 };
 
 Sprite_Battler.prototype.startMotion = function(motionType) {
@@ -3003,6 +3003,7 @@ Sprite_Battler.prototype.forceMotion = function(motionType) {
 };
 
 Sprite_Battler.prototype.refreshMotion = function() {
+$gameSwitches.setValue(597,false)
 };
 
 Sprite_Battler.prototype.startActionMotion = function() {

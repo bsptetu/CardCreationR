@@ -209,3 +209,7 @@ ImageManager.loadBitmap = function(folder, filename, hue, smooth) {
         return this.loadEmptyBitmap();
     }
 };
+
+Window_BattleLog.prototype.messageSpeed = function() {
+    return 0;
+};
