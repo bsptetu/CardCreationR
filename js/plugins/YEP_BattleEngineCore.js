@@ -2977,7 +2977,9 @@ Sprite_Battler.prototype.stepBack = function() {
 };
 
 Sprite_Battler.prototype.stepFlinch = function() {
+if (this.x > 570) {
 $gameSwitches.setValue(597,true)
+    }
     this.startMove(0, 0, 15);
 
 };

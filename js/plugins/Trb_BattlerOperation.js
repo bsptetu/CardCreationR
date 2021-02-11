@@ -85,7 +85,7 @@ Scene_Battle.prototype.updateOriginalBattleProcess1 = function() {
  $gameParty.set(7, 178, 538, 0)
  $gameParty.set(8, 178, 675, 0)
  $gameParty.set(9, -250, 724, 0)
-$gameTroop.set(1, 680, 545, 1)
+$gameTroop.set(1, 680, 515, 1)
 $gameTroop.set(2, 438, 304, 1)
 $gameTroop.set(3, 438, 446, 1)
 $gameTroop.set(4, 438, 585, 1)

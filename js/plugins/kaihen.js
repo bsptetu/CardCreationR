@@ -183,7 +183,7 @@ Sprite_Actor.prototype.damageOffsetX = function() {
 };
 
 Sprite_Actor.prototype.damageOffsetY = function() {
-    return 50;
+    return 80;
 };
 
 Sprite_Enemy.prototype.damageOffsetX = function() {
@@ -191,7 +191,7 @@ Sprite_Enemy.prototype.damageOffsetX = function() {
 };
 
 Sprite_Enemy.prototype.damageOffsetY = function() {
-    return 50;
+    return 80;
 };
 
 Sprite_Enemy.prototype.startCollapse = function() {
