@@ -612,8 +612,7 @@ Scene_Map.prototype.updateMain = function() {
 };
 
 Scene_Map.prototype.isFastForward = function() {
-    return ($gameMap.isEventRunning() && !SceneManager.isSceneChanging() &&
-            (Input.isLongPressed('ok') || TouchInput.isLongPressed()));
+　return false;
 };
 
 Scene_Map.prototype.stop = function() {
@@ -2225,6 +2224,7 @@ Scene_Debug.prototype.helpText = function() {
 // The scene class of the battle screen.
 
 function Scene_Battle() {
+   $gameScreen.startTint([-255,-255,-255,0], 1)
     this.initialize.apply(this, arguments);
 }
 
@@ -2242,7 +2242,6 @@ Scene_Battle.prototype.create = function() {
 
 Scene_Battle.prototype.start = function() {
     Scene_Base.prototype.start.call(this);
-   $gameScreen.startTint([-255,-255,-255,0], 1)
     this.startFadeIn(this.fadeSpeed(), false);
     BattleManager.playBattleBgm();
     BattleManager.startBattle();

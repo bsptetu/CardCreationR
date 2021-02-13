@@ -4574,7 +4574,7 @@ Scene_Battle.prototype.selectPreviousCommand = function() {
       if (BattleManager.isInputting() && BattleManager.actor()) {
         this.startActorCommandSelection();
       } else {
-        Yanfly.BEC.Scene_Battle_startPartyCommandSelection.call(this);
+        //Yanfly.BEC.Scene_Battle_startPartyCommandSelection.call(this);
       }
     } else {
       Yanfly.BEC.Scene_Battle_selectPreviousCommand.call(this);
