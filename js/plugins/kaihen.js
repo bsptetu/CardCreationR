@@ -12,11 +12,11 @@ Game_Battler.prototype.performMiss = function() {
 };
 
 Window_BattleLog.prototype.animationBaseDelay = function() {
-    return 1;
+    return 0;
 };
 
 Window_BattleLog.prototype.animationNextDelay = function() {
-    return 1;
+    return 0;
 };
 
 Window_BattleLog.prototype.updateWaitCount = function() {

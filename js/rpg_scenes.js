@@ -2224,7 +2224,6 @@ Scene_Debug.prototype.helpText = function() {
 // The scene class of the battle screen.
 
 function Scene_Battle() {
-   $gameScreen.startTint([-255,-255,-255,0], 1)
     this.initialize.apply(this, arguments);
 }
 
