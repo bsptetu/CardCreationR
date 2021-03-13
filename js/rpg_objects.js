@@ -1652,17 +1652,28 @@ Game_Action.prototype.apply = function(target) {
     result.evaded = (!result.missed && Math.random() < this.itemEva(target));
     result.physical = this.isPhysical();
     result.drain = this.isDrain();
-    if (result.isHit()) {
+//    if (this.item().damage.type > 0) {
+     if (result.isHit()) {
         if (this.item().damage.type > 0) {
             result.critical = (Math.random() < this.itemCri(target));
             var value = this.makeDamageValue(target, result.critical);
             this.executeDamage(target, value);
         }
+     }
         this.item().effects.forEach(function(effect) {
             this.applyItemEffect(target, effect);
         }, this);
+            this.applyItemEffect(target, effect);
         this.applyItemUserEffect(target);
-    }
+//    } else {
+//             result.critical = (Math.random() < this.itemCri(target));
+//            var value = this.makeDamageValue(target, result.critical);
+//            this.executeDamage(target, value);
+//       this.item().effects.forEach(function(effect) {
+//            this.applyItemEffect(target, effect);
+//        }, this);
+//        this.applyItemUserEffect(target);
+//    }
 };
 
 Game_Action.prototype.makeDamageValue = function(target, critical) {
@@ -1894,8 +1905,8 @@ Game_Action.prototype.itemEffectAddNormalState = function(target, effect) {
         chance *= this.lukEffectRate(target);
     }
     if (Math.random() < chance) {
-        target.addState(effect.dataId);
-        this.makeSuccess(target);
+              target.addState(effect.dataId);
+              this.makeSuccess(target);
     }
 };
 

@@ -123,6 +123,7 @@ Sprite_Enemy.prototype.updateFrame = function() {
 		      this.setFrame(0, 0, this.bitmap.width, frameHeight);
 		}
 		else {
+		if (widthEnwmy > 480) {
 		　　if ($gameSwitches.value(597)) {
    		　　   if ($gameSwitches.value(598)) {
 		         var frameY = this._anime_cnt;
@@ -137,5 +138,10 @@ Sprite_Enemy.prototype.updateFrame = function() {
 		      var frameY = this._anime_cnt;
 		      this.setFrame(frameY * 120,0,120,150);
 		　　}
+		}
+		else {
+		      var frameY = this._anime_cnt;
+		      this.setFrame(frameY * 80,0,80,108);
+		}
 		}
 };

@@ -993,7 +993,7 @@ Sprite_Enemy.prototype.updatePosition = function() {
 Sprite_Enemy.prototype.updateStateSprite = function() {
     this._stateIconSprite.y = -120;//-Math.round((this.bitmap.height + 40) * 0.85);
     this._stateIconSprite.x = 55;
-    if (this.bitmap.height > 150) {
+    if (this.bitmap.height > 330) {
         this._stateIconSprite.y = -180;
     }
 };
