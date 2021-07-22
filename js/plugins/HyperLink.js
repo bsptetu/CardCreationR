@@ -48,18 +48,22 @@
 		if (window.RPGAtsumaru && window.RPGAtsumaru.popups && window.RPGAtsumaru.popups.openLink) {
 			window.RPGAtsumaru.popups.openLink(url);
 		} else if (this._errorPrinter) {
-			var link = '<a href="' + url + '" target="_blank" id="HyperLink" style="color:red;font-size: 30pt;background-color: #eee;border-radius: 1em;">' + title + '</a>';
-			this._errorPrinter.innerHTML = this._makeErrorHtml(description, link);
+	if ($gameSwitches.value(689)) {
+	var link = '<a href="https://twitter.com/gameNine9" id="HyperLink" target="_blank"><img src="taitoruhe3.png"></a>';
+	} else {
+	var link = '<a href="index.html" id="HyperLink"><img src="taitoruhe.png"></a>';
+	}
+			this._errorPrinter.innerHTML = this._makeErrorHtml("", link);
 			var a = document.getElementById('HyperLink');
 			a.addEventListener('mousedown', stopPropagation);
 			a.addEventListener('touchstart', stopPropagation);
 			a.addEventListener('click', function(event) {
-				if (Utils.isNwjs()) {
-					var exec = require('child_process').exec;
-					var command = process.platform === 'win32' ? 'rundll32.exe url.dll,FileProtocolHandler' : 'open';
-					exec(command + ' "' + url + '"');
-					event.preventDefault();
-				}
+				//if (Utils.isNwjs()) {
+				//	var exec = require('child_process').exec;
+				//	var command = process.platform === 'win32' ? 'rundll32.exe url.dll,FileProtocolHandler' : 'open';
+				//	exec(command + ' "' + url + '"');
+				//	event.preventDefault();
+				//}
 			});
 		}
 	};

@@ -102,7 +102,7 @@ Window_BattleStatus.prototype.initialize = function() {
 };
 
 Window_PartyCommand.prototype.initialize = function() {
-    var y = 720;Graphics.boxHeight - this.windowHeight();
+    var y = 650;Graphics.boxHeight - this.windowHeight();
     Window_Command.prototype.initialize.call(this, 500, y);
     this.openness = 0;
     this.deactivate();
@@ -129,7 +129,7 @@ Window_PartyCommand.prototype.windowWidth = function() {
 };
 
 Window_PartyCommand.prototype.numVisibleRows = function() {
-    return 2;
+    return 3;
 };
 
 Window_BattleLog.prototype.initialize = function() {
@@ -211,5 +211,51 @@ ImageManager.loadBitmap = function(folder, filename, hue, smooth) {
 };
 
 Window_BattleLog.prototype.messageSpeed = function() {
-    return 0;
+    return 0.1;
 };
+
+Game_Unit.prototype.randomTarget = function() {
+ if (this.tgrSum() !== 0) {
+    var tgrRand = Math.random() * this.tgrSum();
+    var target = null;
+    this.aliveMembers().forEach(function(member) {
+        tgrRand -= member.tgr;
+        if (tgrRand <= 0 && !target) {
+            target = member;
+        }
+    });
+  }
+    var tgrRand = Math.random() * this.tgrSum();
+    this.aliveMembers().forEach(function(member) {
+        tgrRand -= member.tgr;
+        if (tgrRand <= 0 && !target) {
+            target = member;
+        }
+    });
+    return target;
+};
+
+(function () {
+  var _render = Graphics.render;
+  Graphics.render = function (stage) {
+    if (this._skipCount < 0) {
+      this._skipCount = 0;
+    }
+    _render.call(this, stage);
+  };
+})();
+
+(() => {
+
+    SceneManager.isGameActive = function () {
+        if ($gameSystem.GameInactiveStop != true) { return true; }
+        try {
+            return window.top.document.hasFocus();
+        } catch (e) {
+
+            return true;
+        }
+    };
+
+
+})();
